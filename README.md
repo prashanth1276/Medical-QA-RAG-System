@@ -33,13 +33,23 @@ A RAG-based question answering system for medical guidelines documentation, impl
    - Dynamic context window based on query complexity
    - Temperature=0.2 for factual responses
    - Strict context-bound answers
+     
+4. **Caching**:
+   - Implemented LRU cache for frequent queries
+   - Assumed repeated queries would be common in clinical use
 
 ## Sample Output
 **Test Query**:  
-`Give me the correct coded classification for: "Recurrent depressive disorder, currently in remission"`
+```text
+Give me the correct coded classification for: "Recurrent depressive disorder, currently in remission"
+```
 
-**System Response**:  
-`F33.4`
+**Output**: 
+```text
+The correct coded classification is:
+
+F33.4 Recurrent depressive disorder, currently in remission
+```
 
 ## Limitations
 1. **Document Scope**:
@@ -60,6 +70,7 @@ A RAG-based question answering system for medical guidelines documentation, impl
   - Suggested optimization for medical text preprocessing regex patterns
 - **Grok AI**:
   - Assisted in designing the prompt engineering strategy for Llama3
+  - For Interface
   - Recommended the chunk size (500 chars) based on medical text characteristics
   - Provided insights on error handling patterns for Medical QA RAG system
 
