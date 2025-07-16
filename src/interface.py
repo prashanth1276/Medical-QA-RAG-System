@@ -4,14 +4,25 @@ from typing import Optional
 def create_gradio_interface(rag_pipeline):
     """Medical QA interface with session memory"""
     with gr.Blocks(title="Clinical Guidelines QA") as interface:
-        gr.Markdown("## Ask About Medical Guidelines")
+        gr.Markdown("## 🩺 Medical QnA RAG System")
+
+        with gr.Row(equal_height=True):
+            query = gr.Textbox(
+                label="Your Question",
+                placeholder="e.g. What's the ICD code for...",
+                lines=2,
+                scale=5
+            )
+            submit = gr.Button("🔍 Ask", size="sm", variant="primary", scale=1)
         
-        with gr.Row():
-            query = gr.Textbox(label="Your Question", placeholder="e.g. What's the ICD code for...")
-            submit = gr.Button("Ask")
+        output = gr.Textbox(
+            label="Answer",
+            interactive=False,
+            lines=4,
+            show_copy_button=True
+        )
         
-        output = gr.Textbox(label="Answer", interactive=False)
-        
+        gr.Markdown("### 💡 Example Questions:")
         examples = gr.Examples(
             examples=[
                 ["ICD-10 code for major depression"],
@@ -26,5 +37,5 @@ def create_gradio_interface(rag_pipeline):
             inputs=query,
             outputs=output
         )
-    
+
     return interface
