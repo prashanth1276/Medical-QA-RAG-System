@@ -3,13 +3,13 @@ from typing import Optional
 
 def create_gradio_interface(rag_pipeline):
     """Medical QA interface with session memory"""
-    with gr.Blocks(title="Clinical Guidelines QA") as interface:
+    with gr.Blocks(title="Clinical Guidelines QnA System") as interface:
         gr.Markdown("## 🩺 Medical QnA RAG System")
 
         with gr.Row(equal_height=True):
             query = gr.Textbox(
                 label="Your Question",
-                placeholder="e.g. What's the ICD code for...",
+                placeholder="What's your Question...",
                 lines=2,
                 scale=5
             )
@@ -25,9 +25,9 @@ def create_gradio_interface(rag_pipeline):
         gr.Markdown("### 💡 Example Questions:")
         examples = gr.Examples(
             examples=[
-                ["ICD-10 code for major depression"],
-                ["Treatment guidelines for bipolar disorder"],
-                ["Diagnostic criteria for PTSD"]
+                ["Give me the correct coded classification for the following diagnosis: 'Recurrent depressive disorder, currently in remission' "],
+                ["Give me the correct coded classification for the following diagnosis: 'Severe depressive episode with psychotic symptoms'"],
+                ["Give me the correct coded classification for the following diagnosis: 'Generalized anxiety disorder with panic attacks'"]
             ],
             inputs=query
         )

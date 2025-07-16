@@ -1,3 +1,4 @@
+import time
 from src.vector_store import VectorStore
 import ollama
 import re
@@ -11,13 +12,25 @@ class RAGPipeline:
     def __init__(self, model_name: str = "llama3"):
         self.vector_store = VectorStore()
         self.model_name = model_name
+        # Pre-load model during initialization
+        self.client = ollama.Client()
         self.logger = logging.getLogger(__name__)
         
-        try:
-            ollama.list()
-            self.logger.info(f"Ollama connected using {model_name}")
-        except Exception as e:
-            raise RuntimeError(f"Ollama error: {str(e)}")
+        # Add model readiness check here 
+        self._wait_for_model_ready()  # Ensures model is loaded and ready
+
+    def _wait_for_model_ready(self):
+        """Ensures Ollama model is fully loaded before proceeding"""
+        while True:
+            try:
+                self.client.pull(self.model_name)  # Ensure model exists
+                if ollama.list():  # Verify model is loaded
+                    self.logger.info(f"Model {self.model_name} ready")
+                    break
+                time.sleep(1)
+            except Exception as e:
+                self.logger.warning(f"Model loading attempt failed: {str(e)}")
+                time.sleep(1)
 
     def ingest_documents(self, chunks: List[str]):
         """Store document chunks with enhanced medical text processing"""
@@ -46,7 +59,9 @@ Provide a concise, accurate response. If unsure, say "Not covered in guidelines"
             response = ollama.generate(
                 model=self.model_name,
                 prompt=prompt,
-                options={'temperature': 0.2}
+                options={'temperature': 0.2,
+                         'timeout': 10  # 10-second timeout
+                        }
             )
             
             return self._postprocess(response['response'])

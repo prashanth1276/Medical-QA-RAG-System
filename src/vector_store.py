@@ -34,14 +34,15 @@ class VectorStore:
         """Semantic search with medical term boosting"""
         query_embedding = self.model.encode(
             [query],
-            show_progress_bar=False
+            show_progress_bar=False,
+            convert_to_tensor=True  # Faster than numpy for single queries
         )
         
         # Boost ICD-10 code relevance
         if re.search(r'[A-Z]\d{2}\.\d', query):
             k = min(k * 2, 10)  # Wider search for code queries
         
-        scores, indices = self.index.search(query_embedding, k)
+        scores, indices = self.index.search(query_embedding.numpy(), k)
         return [
             (self.documents[i], float(scores[0][j]))
             for j, i in enumerate(indices[0])
