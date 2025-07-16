@@ -11,8 +11,8 @@
 ```bash
 git clone https://github.com/yourusername/medical-qa-rag.git
 cd medical-qa-rag
-python -m venv venv
-source venv/bin/activate  # Linux/Mac
-venv\Scripts\activate    # Windows
+conda create -p venv python==3.12
+conda activate venv/   # Windows
 pip install -r requirements.txt
 ollama pull llama3
+ollama run llama3    # Run this in different Terminal window
